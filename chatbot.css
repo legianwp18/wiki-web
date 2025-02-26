@@ -548,6 +548,10 @@ body {
     flex: 3;
 }
 
+.date-col {
+    flex: 1;
+}
+
 .file-col,
 .action-col {
     flex: 1;
@@ -843,4 +847,36 @@ body {
 
 .submit-btn:hover {
     background-color: #d64871;
+}
+
+.date-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-right: 10px;
+    width: 130px;
+    background:transparent url(image/icon-calendar.svg) no-repeat right 14px center;
+}
+
+.form-filter {
+    margin: 0 0 20px;
+    position: relative;
+}
+
+.filter-btn {
+    background-color: #e75480;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 11px 15px;
+    float: right;
+    cursor: pointer;
+    width: 120px;
+}
+
+.view-btn {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
 }

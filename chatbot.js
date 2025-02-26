@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     //Get data assistant
     fetchDataFromAPI();
-
+    
     //Get data unanswered
     fetchDataUnansweredFromAPI();
-    
+
     // Set up main menu navigation
     setupMainNavigation();
     
@@ -48,7 +48,7 @@ function displayData(dataList) {
         row.innerHTML = `
             <div class="table-row">
                 <div class="td-col title-col"> ${data.name}</div>
-                <div class="td-col file-col"><button class="view-btn"><i>👁️</i></button></div>
+                <div class="td-col file-col"><button class="view-btn"><img src="image/icon-eye.svg" alt="View"></button></div>
                 <div class="td-col action-col">
                     <span class="edit-icon" data-id="${data._id}" onclick="editData('${data._id}')" data-title="Edit">✏️</span>
                 </div>
@@ -85,8 +85,31 @@ function displayDataUnanswered(dataList) {
     });
 }
 
+function displayFeedbacks(dataList) {
+    const tbody = document.getElementById('feedbackList');
+    tbody.innerHTML = '';
+    
+    if (!dataList || dataList.length === 0) {
+        tbody.innerHTML = '<div class="table-row"><div class="td-col date-col">No data</div></div>';
+        return;
+    }
+    
+    dataList.forEach(data => {
+        const row = document.createElement('tr');
+        const date = new Date(data.createdAt);
+        const formattedDate = `${date.getDate()} ${date.toLocaleString('en-US', {month: 'short'})} ${date.getFullYear()}, ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+        row.innerHTML = `
+            <div class="table-row">
+                <div class="td-col date-col">${formattedDate}</div>
+                <div class="td-col file-col">legian.wahyu@sociolla.com</div>
+                <div class="td-col action-col">${data.rating ? 'YES' : 'NO'}${data.reason ? ', ' + data.reason : ''}</div>
+            </div>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
 function updateFileName(input) {
-    debugger;
     if (input.files && input.files[0]) {
         const fileName = input.files[0].name;
         document.getElementById('fileInfo').textContent = fileName;
@@ -132,7 +155,7 @@ async function uploadFile() {
         const formData = new FormData();
         formData.append('name', titleInput.value.trim());
         formData.append('files', fileInput.files[0]);
-        
+
         // Send data to API
         const response = await fetch(`${URL_API}/upload`, {
             method: 'POST',
@@ -215,6 +238,39 @@ async function fetchDataFromAPI() {
         displayData(dummyData);
     } finally {
         showLoading(false);
+    }
+}
+
+// fetch feedbacks
+async function fetchFeedbacks() {    
+    try {
+
+        const response = await fetch(`${URL_API}/feedback`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+        
+        const response_data = await response.json();
+
+        displayFeedbacks(response_data.data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        showError(`Gagal memuat data: ${error.message}`);
+        
+        // Tampilkan data dummy jika API tidak tersedia (untuk demo saja)
+        const dummyData = [
+            // { id: 1, name: 'Employee Handbook' },
+            // { id: 2, name: 'Employee Handbook 2'}
+        ];
+        // displayData(dummyData);
+    } finally {
+        // showLoading(false);
     }
 }
 
@@ -327,6 +383,9 @@ function showContent(contentId) {
                 window.userInput.focus();
             }, 100);
         }
+        if (contentId === 'feedback') {
+            fetchFeedbacks();
+        }
     }
 }
 
@@ -403,7 +462,7 @@ async function editData(id) {
         
         document.getElementById('editModal').classList.add('active');
         document.getElementById('_id').value = data._id;
-        document.getElementById('newTitleInput').value = data.name;
+        document.getElementById('newTitleInputModify').value = data.name;
         
     } catch (error) {
         console.error('Error fetching user data:', error);
@@ -610,6 +669,13 @@ function addUserMessage(message) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+// Add bot message to chat
+// function addBotMessage(message) {
+//     const messageElement = document.createElement('div');
+//     messageElement.classList.add('message', 'bot-message');
+//     messageElement.textContent = message;
+//     chatMessages.appendChild(messageElement);
+// }
 function addBotMessage(message) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('message', 'bot-message');
