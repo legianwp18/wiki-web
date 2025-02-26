@@ -78,7 +78,7 @@
                     <div class="pink-sidebar-section">
                         <a href="#" class="pink-sidebar-item active" data-content="data-assistant">Upload and Delete Data</a>
                         <a href="#" class="pink-sidebar-item" data-content="unanswered">Unanswered Employee's Questions</a>
-                        <a href="#" class="pink-sidebar-item" data-content="chatbot">Employee's Feedback</a>
+                        <a href="#" class="pink-sidebar-item" data-content="feedback">Employee's Feedback</a>
                     </div>
                 </div>
                 
@@ -86,6 +86,7 @@
                 <div class="content-wrapper">
                     <!-- Upload and Delete Data -->
                     <div class="content-section" id="data-assistant">
+                        <h2>List Data</h2>
                         <div id="errorMessage" class="error"></div>
                         <div id="loading" class="loading">Memuat data...</div>
                         <div class="table-view" id="dataTable">
@@ -100,42 +101,40 @@
                         </div>
                     </div>
                     
-                    <!-- Unswered Content -->
+                    <!-- Training Content -->
                     <div class="content-section" id="unanswered" style="display: none;">
                         <div class="table-view">
                             <div class="table-header">
+                                <div class="th-col title-col">TITLE</div>
+                                <div class="th-col file-col">FILE</div>
                                 <div class="th-col title-col">DATE</div>
                                 <div class="th-col title-col">EMAIL</div>
                                 <div class="th-col title-col">QUESTION</div>
                                 <div class="th-col action-col">ACTION</div>
                             </div>
-                            
-                            <div class="table-body" id="unansweredList">
-                            </div>
+                            <div class="table-body" id="unansweredList"></div>
                         </div>
                     </div>
                     
-                    <!-- Chatbot Content -->
-                    <div class="content-section" id="chatbot" style="display: none;">
-                        <div class="chat-messages" id="chatMessages">
-                            <!-- Welcome message -->
-                            <div class="message bot-message">
-                                👋 Hi Legian! I'm your Employee Handbook Assistant. I can help you find information about company policies, procedures, and guidelines. What would you like to know today?
+                    <!-- feedback Content -->
+                    <div class="content-section" id="feedback" style="display: none;">
+                        <h2>Employee's Feedback</h2>
+                        <form class="form-filter">
+                            <input type="text" placeholder="01 Jan 2025" class="date-input">
+                            <input type="text" placeholder="31 Des 2025" class="date-input">
+                            <button class="filter-btn">Summary</button>
+                        </form>
+                        <div class="table-view">
+                            <div class="table-header">
+                                <div class="th-col date-col">DATE</div>
+                                <div class="th-col file-col">EMAIL</div>
+                                <div class="th-col action-col">FEEDBACK</div>
                             </div>
-                        </div>
-                        
-                        <!-- Quick access buttons moved to bottom -->
-                        <div class="quick-access-bottom">
-                            <button class="quick-btn" onclick="sendQuickQuestion('Tell me about company structure')">Company Structure</button>
-                            <button class="quick-btn" onclick="sendQuickQuestion('What are the data security policies?')">Data Security</button>
-                            <button class="quick-btn" onclick="sendQuickQuestion('How do I report non-conformance?')">Non-Conformance Report</button>
-                            <button class="quick-btn" onclick="sendQuickQuestion('What are the social media guidelines?')">Social Media Guidelines</button>
-                        </div>
-                        
-                        <div class="chat-input">
-                            <div class="input-container">
-                                <input type="text" id="userInput" placeholder="Type your question here..." />
-                                <button onclick="sendMessage()">➤</button>
+                            
+                            <div class="table-body" id="feedbackList">
+                                <div class="table-row">
+                                    <div class="td-col date-col">Loading...</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -156,20 +155,20 @@
                     <input type="hidden" id="_id" name="_id">
                     <div class="form-group">
                         <label for="newTitleInput">Title</label>
-                        <input type="text" id="newTitleInput" class="form-input" required>
+                        <input type="text" id="newTitleInputModify" class="form-input" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="fileAttachment">Attachments</label>
                         <div class="file-upload-container">
                             <input type="file" id="fileAttachment" style="display: none;" onchange="updateFileName(this)">
                             <button type="button" class="browse-btn" onclick="document.getElementById('fileAttachment').click()">Browse File</button>
                             <span id="fileInfo" class="file-info">Attach documents</span>
                         </div>
-                    </div>
+                    </div> -->
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="delete-btn" onclick="deleteData()">Delete</button>
+                <button class="delete-btn" onclick="confirmDelete()">Delete</button>
                 <div class="right-buttons">
                     <button class="cancel-btn">Cancel</button>
                     <button class="submit-btn">Submit</button>
