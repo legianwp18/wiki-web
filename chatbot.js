@@ -1,4 +1,5 @@
 const URL_API = "http://localhost:3000"
+let threadIds = [];
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -25,6 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Set up modals
     setupModals();
+
+    setupFeedbackButtons();
 });
 
 // Menampilkan data dalam tabel
@@ -509,13 +512,6 @@ function addUserMessage(message) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Add bot message to chat
-// function addBotMessage(message) {
-//     const messageElement = document.createElement('div');
-//     messageElement.classList.add('message', 'bot-message');
-//     messageElement.textContent = message;
-//     chatMessages.appendChild(messageElement);
-// }
 function addBotMessage(message) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('message', 'bot-message');
@@ -641,3 +637,92 @@ function getFallbackResponse(message) {
     // Default fallback response
     return "I don't have specific information about that in my database. Would you like me to forward your question to HR? Alternatively, you could check the Employee Handbook documents directly or try asking about company structure, training, leave policies, data security, non-conformance reporting, laptop care, seating plans, working areas, or social media guidelines.";
 }
+
+// Function to set up feedback buttons with modal
+function setupFeedbackButtons() {
+    const thumbsUpBtn = document.getElementById('thumbsUpBtn');
+    const thumbsDownBtn = document.getElementById('thumbsDownBtn');
+    const feedbackModal = document.getElementById('feedbackModal');
+    const feedbackTitle = document.getElementById('feedbackTitle');
+    const cancelFeedback = document.getElementById('cancelFeedback');
+    const submitFeedback = document.getElementById('submitFeedback');
+    const closeModal = document.querySelector('.close-modal');
+    
+    let currentFeedbackType = null;
+    
+    if (!thumbsUpBtn || !thumbsDownBtn) return;
+
+    thumbsUpBtn.addEventListener('click', function() {
+        this.classList.toggle('active');
+        
+        if (thumbsDownBtn.classList.contains('active')) {
+            thumbsDownBtn.classList.remove('active');
+        }
+        currentFeedbackType = this.classList.contains('active') ? true : null;
+        feedbackTitle.textContent = "Thank you for the positive feedback!";
+        feedbackModal.classList.add('active');
+    });
+    
+    thumbsDownBtn.addEventListener('click', function() {
+        this.classList.toggle('active');
+        if (thumbsUpBtn.classList.contains('active')) {
+            thumbsUpBtn.classList.remove('active');
+        }
+        currentFeedbackType = this.classList.contains('active') ? false : null;
+        feedbackTitle.textContent = "Sorry for your inconvenience :(";
+        feedbackModal.classList.add('active');
+    });
+    
+    submitFeedback.addEventListener('click', async function() {
+        const feedbackText = document.getElementById('feedbackText').value;
+        submitFeedback.disabled = true;
+        submitFeedback.textContent = "Submitting...";
+        
+        try {
+            await sendFeedbackToAPI({
+                rating: currentFeedbackType,
+                reason: feedbackText,
+            });
+            
+            document.getElementById('feedbackText').value = '';
+            feedbackModal.classList.remove('active');
+        } catch (error) {
+            console.error('Error sending feedback:', error);
+            alert('There was an error submitting your feedback. Please try again.');
+        } finally {
+            submitFeedback.disabled = false;
+            submitFeedback.textContent = "Submit";
+        }
+    });
+    
+    // Close modal handlers
+    closeModal.addEventListener('click', () => feedbackModal.classList.remove('active'));
+    cancelFeedback.addEventListener('click', () => feedbackModal.classList.remove('active'));
+    window.addEventListener('click', (event) => {
+        if (event.target === feedbackModal) {
+            feedbackModal.classList.remove('active');
+        }
+    });
+}
+
+async function sendFeedbackToAPI(feedbackData) {
+    const response = await fetch(`${URL_API}/feedback`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(feedbackData)
+    });
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`API Error (${response.status}): ${errorText}`);
+    }
+    
+    return await response.json();
+}
+
+// Initialize when the document is ready
+document.addEventListener('DOMContentLoaded', function() {
+    setupFeedbackButtons();
+});
