@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     //Get data assistant
     fetchDataFromAPI();
+
+    //Get data unanswered
+    fetchDataUnansweredFromAPI();
     
     // Set up main menu navigation
     setupMainNavigation();
@@ -48,6 +51,33 @@ function displayData(dataList) {
                 <div class="td-col file-col"><button class="view-btn"><i>👁️</i></button></div>
                 <div class="td-col action-col">
                     <span class="edit-icon" data-id="${data._id}" onclick="editData('${data._id}')" data-title="Edit">✏️</span>
+                </div>
+            </div>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function displayDataUnanswered(dataList) {
+    const tbody = document.getElementById('unansweredList');
+    tbody.innerHTML = '';
+    
+    if (!dataList || dataList.length === 0) {
+        tbody.innerHTML = '<div class="table-row"><div class="td-col title-col"></div></div>';
+        return;
+    }
+    
+    dataList.forEach(data => {
+        const row = document.createElement('tr');
+        const date = dayjs(data.createdAt);
+        const formattedDate = date.format('YYYY-MM-DD HH:mm:ss');
+        row.innerHTML = `
+            <div class="table-row">
+                <div class="td-col title-col">${formattedDate}</div>
+                <div class="td-col title-col">dummy@gmail.com</div>
+                <div class="td-col title-col">${data.question}</div>
+                <div class="td-col action-col">
+                    <span class="edit-icon" data-id="${data._id}" onclick="updateUnanswered('${data._id}', ${data.updated})" data-title="Edit"><input type="checkbox" ${data.updated ? 'checked' : ''}></span>
                 </div>
             </div>
         `;
@@ -183,6 +213,42 @@ async function fetchDataFromAPI() {
             // { id: 2, name: 'Employee Handbook 2'}
         ];
         displayData(dummyData);
+    } finally {
+        showLoading(false);
+    }
+}
+
+async function fetchDataUnansweredFromAPI() {
+    showLoading(true);
+    showError('');
+    
+    try {
+
+        const response = await fetch(`${URL_API}/unanswered`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': 'connect.sid=s%3Awb1s6ZqAl3Lb7Ob0tg7tZv7l4iChc6BW.zeX3HeAV3jraGlpPU6ZnuSP%2BvFLkrE2a1cPUQHDRK9c'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+        
+        const response_data = await response.json();
+
+        displayDataUnanswered(response_data.data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        showError(`Gagal memuat data: ${error.message}`);
+        
+        // Tampilkan data dummy jika API tidak tersedia (untuk demo saja)
+        const dummyData = [
+            // { id: 1, name: 'Employee Handbook' },
+            // { id: 2, name: 'Employee Handbook 2'}
+        ];
+        displayDataUnanswered(dummyData);
     } finally {
         showLoading(false);
     }
@@ -358,6 +424,38 @@ async function editData(id) {
         document.getElementById('status').value = dummyData.status;
         
         openModal('formModal');
+    } finally {
+        showLoading(false);
+    }
+}
+
+async function updateUnanswered(id, update) {
+    showLoading(true);
+    showError('');
+
+    const setUpdate = !update;
+    
+    try {
+        const response = await fetch(`${URL_API}/unanswered/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                update: setUpdate
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+        
+        const response_data = await response.json();
+        const data = response_data.data;
+        
+    } catch (error) {
+        console.error('Error fetching unanswered data:', error);
+        showError(`Gagal memuat data unanswered: ${error.message}`);
     } finally {
         showLoading(false);
     }
