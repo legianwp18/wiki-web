@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHIELD - Employee Handbook System</title>
+    <link rel="stylesheet" href="chatbot.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Main sidebar -->
+        <div class="sidebar-container">
+            <div class="sidebar">
+                <div class="logo">
+                    <img src="./image/logo.svg" alt="SHIELD Logo" />
+                </div>
+                
+                <div class="user-info">
+                    <img src="./image/profile.svg" alt="User Avatar" />
+                    <div class="user-details">
+                        <span class="user-name">Legian Wahyu Prananta</span>
+                        <span class="user-title">Senior Internal Application Developer</span>
+                    </div>
+                </div>
+                
+                <div class="menu">
+                    <a href="#" class="menu-item" data-section="dashboard">
+                        <i>◨</i> Dashboard
+                    </a>
+                    <a href="#" class="menu-item" data-section="leave-request">
+                        <i>📅</i> Leave Request
+                    </a>
+                    <a href="#" class="menu-item" data-section="todo-list">
+                        <i>✓</i> To Do List
+                    </a>
+                    <a href="#" class="menu-item" data-section="announcements">
+                        <i>📢</i> Announcement
+                    </a>
+                    <a href="#" class="menu-item" data-section="reimbursement">
+                        <i>💲</i> Reimbursement
+                    </a>
+                    <a href="#" class="menu-item" data-section="dailycheckin">
+                        <i>🔍</i> Dailycheckin
+                    </a>
+                    <a href="#" class="menu-item" data-section="company">
+                        <i>🔄</i> Company
+                    </a>
+                    <a href="#" class="menu-item" data-section="asset-request">
+                        <i>📦</i> Asset Request
+                    </a>
+                    <a href="#" class="menu-item" data-section="business-trip">
+                        <i>✈️</i> Business Trip
+                    </a>
+                    <a href="#" class="menu-item" data-section="it-support">
+                        <i>🔧</i> IT Support
+                    </a>
+                    <a href="#" class="menu-item active" data-section="employee-handbook">
+                        <i>📚</i> Information Center
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <h1></h1>
+                <div class="header-actions">
+                    <button class="add-btn" id="addNewBtn">+</button>
+                    <button class="header-btn">🔔</button>
+                    <button class="header-btn">⚙️</button>
+                </div>
+            </div>
+            
+            <!-- Main content with sidebar and dynamic content -->
+            <div class="main-content">
+                <div class="pink-sidebar">
+                    <div class="pink-sidebar-section">
+                        <a href="#" class="pink-sidebar-item active" data-content="data-assistant">Upload and Delete Data</a>
+                        <a href="#" class="pink-sidebar-item" data-content="training">Unanswered Employee's Questions</a>
+                        <a href="#" class="pink-sidebar-item" data-content="chatbot">Employee's Feedback</a>
+                    </div>
+                </div>
+                
+                <!-- Dynamic content area -->
+                <div class="content-wrapper">
+                    <!-- Upload and Delete Data -->
+                    <div class="content-section" id="data-assistant">
+                        <div id="errorMessage" class="error"></div>
+                        <div id="loading" class="loading">Memuat data...</div>
+                        <div class="table-view" id="dataTable">
+                            <div class="table-header">
+                                <div class="th-col title-col">TITLE</div>
+                                <div class="th-col file-col">FILE</div>
+                                <div class="th-col action-col">ACTION</div>
+                            </div>
+                            
+                            <div class="table-body" id="dataList">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Training Content -->
+                    <div class="content-section" id="training" style="display: none;">
+                        <div class="table-view">
+                            <div class="table-header">
+                                <div class="th-col title-col">TITLE</div>
+                                <div class="th-col file-col">FILE</div>
+                                <div class="th-col action-col">ACTION</div>
+                            </div>
+                            
+                            <div class="table-body">
+                                <div class="table-row">
+                                    <div class="td-col title-col">New Employee Onboarding</div>
+                                    <div class="td-col file-col"><button class="view-btn"><i>👁️</i></button></div>
+                                    <div class="td-col action-col">
+                                        <span class="edit-icon" data-id="1" data-title="New Hire Handbook">✏️</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-row">
+                                    <div class="td-col title-col">Leadership Development</div>
+                                    <div class="td-col file-col"><button class="view-btn"><i>👁️</i></button></div>
+                                    <div class="td-col action-col">
+                                        <span class="edit-icon" data-id="2" data-title="SOP for Online Refund">✏️</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-row">
+                                    <div class="td-col title-col">Technical Skills Workshop</div>
+                                    <div class="td-col file-col"><button class="view-btn"><i>👁️</i></button></div>
+                                    <div class="td-col action-col">
+                                        <span class="edit-icon" data-id="3" data-title="Non Conformance Report (NCR)">✏️</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chatbot Content -->
+                    <div class="content-section" id="chatbot" style="display: none;">
+                        <div class="chat-messages" id="chatMessages">
+                            <!-- Welcome message -->
+                            <div class="message bot-message">
+                                👋 Hi Legian! I'm your Employee Handbook Assistant. I can help you find information about company policies, procedures, and guidelines. What would you like to know today?
+                            </div>
+                        </div>
+                        
+                        <!-- Quick access buttons moved to bottom -->
+                        <div class="quick-access-bottom">
+                            <button class="quick-btn" onclick="sendQuickQuestion('Tell me about company structure')">Company Structure</button>
+                            <button class="quick-btn" onclick="sendQuickQuestion('What are the data security policies?')">Data Security</button>
+                            <button class="quick-btn" onclick="sendQuickQuestion('How do I report non-conformance?')">Non-Conformance Report</button>
+                            <button class="quick-btn" onclick="sendQuickQuestion('What are the social media guidelines?')">Social Media Guidelines</button>
+                        </div>
+                        
+                        <div class="chat-input">
+                            <div class="input-container">
+                                <input type="text" id="userInput" placeholder="Type your question here..." />
+                                <button onclick="sendMessage()">➤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for editing content -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Modify File</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="hidden" id="_id" name="_id">
+                    <div class="form-group">
+                        <label for="newTitleInput">Title</label>
+                        <input type="text" id="newTitleInput" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileAttachment">Attachments</label>
+                        <div class="file-upload-container">
+                            <input type="file" id="fileAttachment" style="display: none;" onchange="updateFileName(this)">
+                            <button type="button" class="browse-btn" onclick="document.getElementById('fileAttachment').click()">Browse File</button>
+                            <span id="fileInfo" class="file-info">Attach documents</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="delete-btn" onclick="confirmDelete()">Delete</button>
+                <div class="right-buttons">
+                    <button class="cancel-btn">Cancel</button>
+                    <button class="submit-btn">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for adding new content -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New File</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="newTitleInput">Title</label>
+                        <input type="text" id="newTitleInput" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileAttachment">Attachments</label>
+                        <div class="file-upload-container">
+                            <input type="file" id="fileAttachment" style="display: none;" onchange="updateFileName(this)">
+                            <button type="button" class="browse-btn" onclick="document.getElementById('fileAttachment').click()">Browse File</button>
+                            <span id="fileInfo" class="file-info">Attach documents</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="right-buttons full-width">
+                    <button class="cancel-btn">Cancel</button>
+                    <button class="submit-btn" onclick="uploadFile()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include the external JavaScript file -->
+    <script src="chatbot.js"></script>
+</body>
+</html>
