@@ -686,7 +686,7 @@ function showLongerTyping() {
     
     // Add animated text
     const typingText = document.createElement('div');
-    typingText.innerHTML = 'Searching <span class="searching-dots"><span>.</span><span>.</span><span>.</span></span>';
+    typingText.innerHTML = 'Thinking <span class="searching-dots"><span>.</span><span>.</span><span>.</span></span>';
     typingText.style.display = 'flex';
     typingText.style.alignItems = 'center';
     typingContainer.appendChild(typingText);
