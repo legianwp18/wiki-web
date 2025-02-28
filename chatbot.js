@@ -74,7 +74,7 @@ function displayDataUnanswered(dataList) {
         row.innerHTML = `
             <div class="table-row">
                 <div class="td-col title-col">${formattedDate}</div>
-                <div class="td-col title-col">dummy@gmail.com</div>
+                <div class="td-col title-col">legian.wahyu@sociolla.com</div>
                 <div class="td-col title-col">${data.question}</div>
                 <div class="td-col action-col">
                     <span class="edit-icon" data-id="${data._id}" onclick="updateUnanswered('${data._id}', ${data.updated})" data-title="Edit"><input type="checkbox" ${data.updated ? 'checked' : ''}></span>
@@ -843,10 +843,12 @@ function setupFeedbackButtons() {
         submitFeedback.textContent = "Submitting...";
         
         try {
-            await sendFeedbackToAPI({
-                rating: currentFeedbackType,
-                reason: feedbackText,
-            });
+            if(currentFeedbackType !== null && feedbackText.trim() !== '') {
+                await sendFeedbackToAPI({
+                    rating: currentFeedbackType,
+                    reason: feedbackText,
+                });
+            }
             
             document.getElementById('feedbackText').value = '';
             feedbackModal.classList.remove('active');
